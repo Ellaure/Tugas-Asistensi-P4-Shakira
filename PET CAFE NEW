@@ -1,0 +1,138 @@
+#include <stdio.h>
+#include <string.h>
+
+
+typedef struct {
+    char nama[50];
+    int energy;
+    int loves;
+    int Pet; // 1 untuk pet, 0 untuk pegawai
+} Karakter;
+
+// Fungsi untuk menampilkan atribut karakter
+void tampilkanAtribut(Karakter *karakter) {
+    printf("%s's Energy: %d\n", karakter->nama, karakter->energy);
+    printf("%s's Loves: %d\n\n", karakter->nama, karakter->loves);
+}
+
+// Fungsi aktivitas Petting untuk menambah loves hewan
+void petting(Karakter *pet) {
+    printf("You are petting %s. %s's loves increased!\n", pet->nama, pet->nama);
+    pet->loves += 10;
+    if (pet->loves > 100) pet->loves = 100;
+}
+
+// Fungsi aktivitas Resting untuk menambah energy pegawai
+void resting(Karakter *pegawai) {
+    printf("%s is resting. Energy increased!\n", pegawai->nama);
+    pegawai->energy += 15;
+    if (pegawai->energy > 100) pegawai->energy = 100;
+}
+
+void working(Karakter *pegawai) {
+    printf("%s is working. Energy decreased!\n", pegawai->nama);
+    pegawai->energy -= 10;
+}
+
+// Fungsi untuk mencari karakter berdasarkan nama
+Karakter* cariKarakter(Karakter karakter[], int jumlah, char* nama) {
+    for (int i = 0; i < jumlah; i++) {
+        if (strcmp(karakter[i].nama, nama) == 0) {
+            return &karakter[i];
+        }
+    }
+    return NULL;
+}
+
+// Fungsi untuk menampilkan urutan karakter pet berdasarkan atribut tertentu
+void showCharactersByAttribute(Karakter karakter[], int jumlah, const char* attribute) {
+    for (int i = 0; i < jumlah - 1; i++) {
+        for (int j = i + 1; j < jumlah; j++) {
+            int swap = 0;
+            if (karakter[i].Pet && karakter[j].Pet) {
+                if (strcmp(attribute, "LOVE") == 0 && karakter[i].loves < karakter[j].loves) {
+                    swap = 1;
+                } else if (strcmp(attribute, "ENERGY") == 0 && karakter[i].energy < karakter[j].energy) {
+                    swap = 1;
+                }
+                if (swap) {
+                    Karakter temp = karakter[i];
+                    karakter[i] = karakter[j];
+                    karakter[j] = temp;
+                }
+            }
+        }
+    }
+
+    printf("Characters of type pet sorted by %s:\n", attribute);
+    for (int i = 0; i < jumlah; i++) {
+        if (karakter[i].Pet) {
+            if (strcmp(attribute, "LOVE") == 0) {
+                printf("%s - Loves: %d\n", karakter[i].nama, karakter[i].loves);
+            } else if (strcmp(attribute, "ENERGY") == 0) {
+                printf("%s - Energy: %d\n", karakter[i].nama, karakter[i].energy);
+            }
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    Karakter pegawai = {"DIANE", 50, 20, 0};
+    Karakter magang = {"KIA" , 60, 80, 0};
+    Karakter pet1 = {"CATY", 40, 70, 1};
+    Karakter pet2 = {"NOYA", 60, 90, 1};
+    Karakter pet3 = {"GINGER", 30, 50, 1};
+    
+    Karakter karakter[5] = {pegawai, magang, pet1, pet2, pet3};
+    
+    char input[50];
+    char perintah[10], jenis[10], atribut[10];
+    while (1) {
+        fgets(input, sizeof(input), stdin);
+        sscanf(input, "%s %s %s", perintah, jenis, atribut);
+
+        if (strcmp(perintah, "EXIT") == 0) {
+            break;
+        }
+
+        if (strcmp(perintah, "SHOW") == 0 && strcmp(jenis, "CATS") == 0) {
+            if (strcmp(atribut, "LOVES") == 0 || strcmp(atribut, "ENERGY") == 0) {
+                showCharactersByAttribute(karakter, 4, atribut);
+            } else {
+                printf("Atribut tidak dikenal.\n");
+            }
+            continue;
+        }
+
+        Karakter *targetKarakter = cariKarakter(karakter, 4, jenis);
+        if (targetKarakter == NULL) {
+            printf("Karakter dengan nama %s tidak ditemukan.\n", jenis);
+            continue;
+        }
+
+        // Cek perintah dan validasi berdasarkan tipe karakter
+        if (strcmp(perintah, "PETTING") == 0) {
+            if (targetKarakter->Pet == 1) {
+                petting(targetKarakter);
+            } else {
+                printf("Pegawai tidak mau disentuh.\n");
+            }
+        } else if (strcmp(perintah, "WORKING") == 0) {
+            if (targetKarakter->Pet == 0) {
+                working(targetKarakter);
+            } else {
+                printf("Pet tidak dapat bekerja.\n");
+            }
+        } else if (strcmp(perintah, "RESTING") == 0) {
+                resting(targetKarakter);
+            
+        } else if (strcmp(perintah, "ATTR") == 0) {
+            tampilkanAtribut(targetKarakter);
+        } else {
+            printf("Perintah tidak dikenal.\n");
+        }
+    }
+    
+    return 0;
+}
