@@ -78,14 +78,16 @@ void showCharactersByAttribute(Karakter karakter[], int jumlah, const char* attr
 }
 
 int main() {
-    Karakter pegawai = {"MOZA", 100, 45, 0};
+    Karakter pegawai1 = {"MOZA", 100, 45, 0};
     Karakter pegawai2 = {"AISYAH", 50, 20, 0};
+    Karakter pegawai3 = {"ANGGIE", 75, 80, 0};
     Karakter magang = {"KIA" , 60, 80, 0};
     Karakter pet1 = {"PUMPKIN", 40, 70, 1};
     Karakter pet2 = {"NOYA", 60, 90, 1};
     Karakter pet3 = {"GINGER", 30, 50, 1};
+    Karakter pet4 = {"KASHI", 40, 55, 1};
     
-    Karakter karakter[6] = {pegawai, pegawai2, magang, pet1, pet2, pet3};
+    Karakter karakter[8] = {pegawai1, pegawai2, pegawai3, magang, pet1, pet2, pet3, pet4};
     
     char input[50];
     char perintah[10], jenis[10], atribut[10];
@@ -100,14 +102,14 @@ int main() {
 
         if (strcmp(perintah, "SHOW") == 0 && strcmp(jenis, "CATS") == 0) {
             if (strcmp(atribut, "LOVES") == 0 || strcmp(atribut, "ENERGY") == 0) {
-                showCharactersByAttribute(karakter, 6, atribut);
+                showCharactersByAttribute(karakter, 8, atribut);
             } else {
                 printf("Atribut tidak dikenal.\n");
             }
             continue;
         }
 
-        Karakter *targetKarakter = cariKarakter(karakter, 6, jenis);
+        Karakter *targetKarakter = cariKarakter(karakter, 8, jenis);
         if (targetKarakter == NULL) {
             printf("Karakter dengan nama %s tidak ditemukan.\n", jenis);
             continue;
