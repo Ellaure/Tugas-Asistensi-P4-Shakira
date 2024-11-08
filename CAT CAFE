@@ -6,7 +6,7 @@ typedef struct {
     char nama[50];
     int energy;
     int loves;
-    int Pet; // 1 untuk pet, 0 untuk pegawai
+    int Pet;
 } Karakter;
 
 // Fungsi untuk menampilkan atribut karakter
@@ -50,7 +50,7 @@ void showCharactersByAttribute(Karakter karakter[], int jumlah, const char* attr
         for (int j = i + 1; j < jumlah; j++) {
             int swap = 0;
             if (karakter[i].Pet && karakter[j].Pet) {
-                if (strcmp(attribute, "LOVE") == 0 && karakter[i].loves < karakter[j].loves) {
+                if (strcmp(attribute, "LOVES") == 0 && karakter[i].loves < karakter[j].loves) {
                     swap = 1;
                 } else if (strcmp(attribute, "ENERGY") == 0 && karakter[i].energy < karakter[j].energy) {
                     swap = 1;
@@ -67,7 +67,7 @@ void showCharactersByAttribute(Karakter karakter[], int jumlah, const char* attr
     printf("Characters of type pet sorted by %s:\n", attribute);
     for (int i = 0; i < jumlah; i++) {
         if (karakter[i].Pet) {
-            if (strcmp(attribute, "LOVE") == 0) {
+            if (strcmp(attribute, "LOVES") == 0) {
                 printf("%s - Loves: %d\n", karakter[i].nama, karakter[i].loves);
             } else if (strcmp(attribute, "ENERGY") == 0) {
                 printf("%s - Energy: %d\n", karakter[i].nama, karakter[i].energy);
@@ -78,16 +78,18 @@ void showCharactersByAttribute(Karakter karakter[], int jumlah, const char* attr
 }
 
 int main() {
-    Karakter pegawai = {"DIANE", 50, 20, 0};
+    Karakter pegawai = {"MOZA", 100, 45, 0};
+    Karakter pegawai2 = {"AISYAH", 50, 20, 0};
     Karakter magang = {"KIA" , 60, 80, 0};
-    Karakter pet1 = {"CATY", 40, 70, 1};
+    Karakter pet1 = {"PUMPKIN", 40, 70, 1};
     Karakter pet2 = {"NOYA", 60, 90, 1};
     Karakter pet3 = {"GINGER", 30, 50, 1};
     
-    Karakter karakter[5] = {pegawai, magang, pet1, pet2, pet3};
+    Karakter karakter[6] = {pegawai, pegawai2, magang, pet1, pet2, pet3};
     
     char input[50];
     char perintah[10], jenis[10], atribut[10];
+    printf("WELCOME TO PET CAFE\n");
     while (1) {
         fgets(input, sizeof(input), stdin);
         sscanf(input, "%s %s %s", perintah, jenis, atribut);
@@ -98,14 +100,14 @@ int main() {
 
         if (strcmp(perintah, "SHOW") == 0 && strcmp(jenis, "CATS") == 0) {
             if (strcmp(atribut, "LOVES") == 0 || strcmp(atribut, "ENERGY") == 0) {
-                showCharactersByAttribute(karakter, 4, atribut);
+                showCharactersByAttribute(karakter, 6, atribut);
             } else {
                 printf("Atribut tidak dikenal.\n");
             }
             continue;
         }
 
-        Karakter *targetKarakter = cariKarakter(karakter, 4, jenis);
+        Karakter *targetKarakter = cariKarakter(karakter, 6, jenis);
         if (targetKarakter == NULL) {
             printf("Karakter dengan nama %s tidak ditemukan.\n", jenis);
             continue;
@@ -116,7 +118,7 @@ int main() {
             if (targetKarakter->Pet == 1) {
                 petting(targetKarakter);
             } else {
-                printf("Pegawai tidak mau disentuh.\n");
+                printf("Pegawai tidak ingin diganggu.\n");
             }
         } else if (strcmp(perintah, "WORKING") == 0) {
             if (targetKarakter->Pet == 0) {
